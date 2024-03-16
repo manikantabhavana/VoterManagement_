@@ -22,7 +22,7 @@ function Reports() {
   const [dataCount,setDataCount]=useState(0);
 
   const filterData = () => {
-   
+    
 
     let filteredData = originalData;
 
@@ -52,7 +52,7 @@ function Reports() {
     }
     if(selectSurveyStatus === "completed"){
       filteredData=filteredData.filter(item=>item.Survey==1);
-    }else if(selectSurveyStatus === "incompleted"){
+    }else if(selectSurveyStatus === "Pending"){
       filteredData=filteredData.filter(item=>item.Survey==0)
     }
     if(searchTerm){
@@ -233,7 +233,7 @@ function Reports() {
                       <select name="surveyStatus" id="surveyor" onChange={(e)=>{setSelectSurveyStatus(e.target.value)}}>                    
                                 <option value="">Select Survey Status</option>
                                 <option value="completed">Completed</option>
-                                <option value="incompleted">Incomplete</option>                     
+                                <option value="Pending">Incomplete</option>                     
                       </select>
                     </div>
                     

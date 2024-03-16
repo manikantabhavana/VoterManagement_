@@ -19,10 +19,6 @@ const DataTable = () => {
   const [RecordsCount,setRecordsCount]=useState(0);
   const [filteredData,setFilteredData]=useState([])
 
-  
-
-
-
   const [columns1,setColumn]=useState('House_Number')
     
    
@@ -39,8 +35,12 @@ const DataTable = () => {
   
   useEffect(() => {
     localStorage.setItem('filters', JSON.stringify(Filters));
+
+    setLoading(true);
+
     setLoading(true)
     
+
   }, [Filters]);
   
 
@@ -56,9 +56,7 @@ const DataTable = () => {
 
   const [SearchTerms,setSearchTerms]=useState(null)
  
-  
-  
-const getConstituencyDetails=async()=>{
+  const getConstituencyDetails=async()=>{
  
  
   try{
@@ -117,9 +115,6 @@ const getWards=async()=>{
    }
      
       const uniqueWards = [...new Set(currentData.map(obj => obj.Wards))];
-
-     
- 
       const convertedListWards = uniqueWards.map(ward => ({
           value: ward,
           label: ward,
@@ -262,18 +257,24 @@ const showDrawer = () => {
 const onClose = () => {
   setOpen(false);
 };
-const onCancel = () => {
-  setFilters({	Wards:49})
+const onCancel = async() => {
+  // const defaultFilters={Wards:49}
+  setFilters({Wards:49});
+  // localStorage.setItem('filters', JSON.stringify(defaultFilters));
   Cookies.remove('Filters')
   setBooth(null)
   setArea(null)
   setMandal(null)
   setWard(null)
   setVillage(null)
-
   setOpen(false);
+
+  await fetchData()
+  
+
   handleReset()
   handleSearch([],()=>{},'Name')
+
 };
 
 const getCount=async()=>{
@@ -302,6 +303,7 @@ useEffect(()=>{
       setData(result);
       setOriginalData(result)
       setLoading(false);
+     
     } catch (error) {
       console.error('Error fetching data:', error);
       setLoading(false);
@@ -312,9 +314,6 @@ useEffect(()=>{
     fetchData()
     setIsloading(true)
   },[Filters])
-
- 
-
 
   const applyFilters=async()=>{
     console.log(Booth,Area,Ward,Village,Mandal,'hello')
@@ -337,8 +336,6 @@ useEffect(()=>{
         setFilters({Mandal:Mandal})
       }
       Cookies.set(Filters,'Filters')
-     
-
 
     }
     catch(error){
@@ -360,7 +357,9 @@ useEffect(()=>{
 
   const handleExport = () => {
     // Use filteredData if available, otherwise use the original data
+
     const exportData = filteredData.length > 0 ? filteredData : originalData;
+
 
     exportToExcel(exportData, 'filtered_table_data.xlsx');
   };
